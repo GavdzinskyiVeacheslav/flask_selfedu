@@ -3,6 +3,8 @@ import os
 
 from flask import Flask, render_template, url_for, request, flash, session, redirect, abort, g
 
+from FDataBase import FDataBase
+
 DATABASE = '/tmp/flsite.db'
 DEBUG = True
 SECRET_KEY = 'vasdnianvsdnfviuvjvfn'
@@ -34,9 +36,10 @@ menu = [{"name": "Установка", "url": "install-flask"},
 
 @app.route("/")
 def index():
-    db = get_db
+    db = get_db()
+    dbase = FDataBase(db)
    # print(url_for("index"))
-    return render_template("index.html", menu = [])
+    return render_template("index.html", menu=dbase.getMenu())
 
 
 @app.teardown_appcontext

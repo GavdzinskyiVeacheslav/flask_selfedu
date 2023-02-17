@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
 <link type="text/css" href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
@@ -12,6 +13,7 @@
 {% endif %}
 {% endblock %}
 </head>
+
 <body>
 {% block content -%}
     {%- block mainmenu -%}
@@ -33,4 +35,5 @@
 {% endblock -%}
 </div>
 </body>
+
 </html>
