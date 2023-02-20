@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-from flask import Flask, render_template, url_for, request, flash, session, redirect, abort, g
+from flask import Flask, render_template, url_for, request, flash, session, redirect, abort, g, dbase
 
 from FDataBase import FDataBase
 
@@ -41,6 +41,22 @@ def index():
     # print(url_for("index"))
     return render_template("index.html", menu=dbase.getMenu())
 
+
+@app.route("/add_post", methods=["POST", "GET"])
+def addPost():
+    db = get_db()
+    db = FDataBase(db)
+
+    if request.method == "POST":
+        if len(request.form['name']) > 4 and len(request.form['post']) > 10:
+            res = dbase.addPost(request.form['name'], request.form['post'])
+            if not res:
+                flash('Ошибка добавления статьи', category='error')
+            else:
+                flash('Статья добавлена успешно', category='success')
+        else:
+            flash('Ошибка добавления статьи', category='error')
+    return render_template('add_post.html', menu = dbase.getMenu(), title="Добавление статьи")
 
 @app.teardown_appcontext
 def close_db(error):
