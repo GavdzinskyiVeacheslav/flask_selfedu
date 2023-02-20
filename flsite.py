@@ -10,9 +10,9 @@ DEBUG = True
 SECRET_KEY = 'vasdnianvsdnfviuvjvfn'
 
 app = Flask(__name__)
-app.config.from_object(__name__) #['SECRET_KEY'] = 'thwrthsjdldnahsrtb'
+app.config.from_object(__name__)  # ['SECRET_KEY'] = 'thwrthsjdldnahsrtb'
 
-app.config.update(dict(DATABASE=os.path.join(app.root_path,'flsite.db')))
+app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
 
 
 def connect_db():
@@ -29,16 +29,16 @@ def create_db():
     db.close()
 
 
-menu = [{"name": "Установка", "url": "install-flask"},
-        {"name": "Первое приложение", "url": "first-app"},
-        {"name": "Обратная связь", "url": "contact"}]
+# menu = [{"name": "Установка", "url": "install-flask"},
+#         {"name": "Первое приложение", "url": "first-app"},
+#         {"name": "Обратная связь", "url": "contact"}]
 
 
 @app.route("/")
 def index():
     db = get_db()
     dbase = FDataBase(db)
-   # print(url_for("index"))
+    # print(url_for("index"))
     return render_template("index.html", menu=dbase.getMenu())
 
 
@@ -56,12 +56,16 @@ def get_db():
 
 @app.route("/about")
 def about():
+    db = get_db()
+    dbase = FDataBase(db)
     print(url_for("about"))
-    return render_template("about.html", title="О сайте", menu=menu)
+    return render_template("about.html", title="О сайте", menu=dbase.getMenu())
 
 
 @app.route("/contact", methods=["POST", "GET"])
 def contact():
+    db = get_db()
+    dbase = FDataBase(db)
     if request.method == 'POST':
         if len(request.form['username']) > 2:
             flash('Сообщение отправлено', category='success')
@@ -69,18 +73,20 @@ def contact():
             flash("Ошибка отправки", category='error')
         print(request.form['username'])
 
-    return render_template("contact.html", title="Обратная связь", menu=menu)
+    return render_template("contact.html", title="Обратная связь", menu=dbase.getMenu())
 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    db = get_db()
+    dbase = FDataBase(db)
     if 'userLogged' in session:
         return redirect(url_for('profile', username=session['userLogged']))
     elif request.method == 'POST' and request.form['username'] == "selfedu" and request.form['psw'] == "123":
         session['userLogged'] = request.form['username']
         return redirect(url_for('profile', username=session['userLogged']))
 
-    return render_template('login.html', title="Авторизация", menu=menu)
+    return render_template('login.html', title="Авторизация", menu=dbase.getMenu())
 
 
 @app.route("/profile/<username>")
@@ -93,7 +99,10 @@ def profile(username):
 
 @app.errorhandler(404)
 def pageNotFount(error):
-    return render_template("page404.html", title='Страница не найдена', menu=menu), 404
+    db = get_db()
+    dbase = FDataBase(db)
+    return render_template("page404.html", title='Страница не найдена', menu=dbase.getMenu()), 404
+
 
 # @app.route("/profile/<username>")
 # def profile(username, path):

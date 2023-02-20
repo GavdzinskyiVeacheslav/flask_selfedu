@@ -8,8 +8,7 @@ class FDataBase:
         try:
             self.__cur.execute(sql)
             res = self.__cur.fetchall()
-            if res:
-                return res
+            if res: return res
         except:
             print("Ошибка чтения из БД")
         return []
